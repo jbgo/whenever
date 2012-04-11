@@ -8,13 +8,6 @@ Capistrano::Configuration.instance(:must_exist).load do
   _cset(:whenever_update_flags) { "--update-crontab #{fetch :whenever_identifier} --set #{fetch :whenever_variables}" }
   _cset(:whenever_clear_flags)  { "--clear-crontab #{fetch :whenever_identifier}" }
 
-  # Disable cron jobs at the begining of a deploy.
-  after "deploy:update_code", "whenever:clear_crontab"
-  # Write the new cron jobs near the end.
-  before "deploy:restart", "whenever:update_crontab"
-  # If anything goes wrong, undo.
-  after "deploy:rollback", "whenever:update_crontab"
-
   namespace :whenever do
     desc <<-DESC
       Update application's crontab entries using Whenever. You can configure \
